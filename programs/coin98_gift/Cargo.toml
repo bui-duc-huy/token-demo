@@ -1,0 +1,21 @@
+[package]
+name = "coin98-token"
+version = "1.0.0"
+authors = ["coin98"]
+license = "Apache-2.0"
+edition = "2021"
+
+[dependencies]
+anchor-lang = "0.24.2"
+mpl-token-metadata = {version = "1.4.3", features = ["no-entrypoint"]}
+solana-program = "1.9.3"
+[features]
+cpi = ["no-entrypoint"]
+default = []
+localhost = []
+no-entrypoint = []
+no-idl = []
+
+[lib]
+name = "coin98_token"
+crate-type = ["cdylib", "lib"]

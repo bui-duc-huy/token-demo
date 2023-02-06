@@ -1,0 +1,9 @@
+[programs.localnet]
+coin98_token = "CX1bqbNdhuc2LS9h8i5frBK9B6CARj6s7Qc8XqCnMU7f"
+
+[provider]
+cluster = "localnet"
+wallet = "~/.config/solana/id.json"
+
+[scripts]
+test = "yarn run ts-mocha -p ./tsconfig.json -t 1000000 test/*.spec.ts"
