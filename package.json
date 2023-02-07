@@ -12,18 +12,19 @@
   "scripts": {
     "build": "anchor build",
     "build:localhost": "anchor build -- --features localhost",
-    "deploy": "solana program deploy ./target/deploy/coin98_multisig.so --program-id ./test/coin98_multisig.keypair.json --url localhost",
+    "deploy": "solana program deploy ./target/deploy/coin98_token.so --url localhost",
     "maintainance": "npm run build:localhost && npm run deploy && npm run test",
     "test": "ts-mocha ./test/*.spec.ts --timeout 60000"
   },
   "dependencies": {
-    "@coin98/solana-support-library": "^0.5.0",
+    "@coin98/solana-support-library": "^0.10.0",
     "@metaplex-foundation/mpl-token-metadata": "^2.8.0",
     "@project-serum/anchor": "^0.24.2",
     "@project-serum/borsh": "^0.2.5",
     "bn.js": "^5.2.1"
   },
   "devDependencies": {
+    "@solana/spl-token": "^0.3.7",
     "@types/bn.js": "^5.1.0",
     "@types/chai": "^4.3.1",
     "@types/mocha": "^9.1.1",

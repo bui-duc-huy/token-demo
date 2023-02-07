@@ -4,12 +4,16 @@ import {
   PublicKey,
   TransactionInstruction,
   Transaction,
-  sendAndConfirmTransaction
 } from '@solana/web3.js';
 import {
+  SolanaService,
+  TokenProgramInstructionService,
+  TokenProgramService,
   sendTransaction,
 } from '@coin98/solana-support-library';
-import { BN, web3 } from '@project-serum/anchor';
+import { BN, web3, SplToken } from '@project-serum/anchor';
+import { createMintToInstruction, TOKEN_PROGRAM_ID } from '@solana/spl-token';
+
 import { DemoTokenInstruction } from './instructions.service';
 
 
@@ -24,9 +28,9 @@ export class DemoTokenServices {
     authority: PublicKey,
     demoTokenProgramId: PublicKey
   ): Promise<string> {
-    console.log(demoTokenProgramId.toString())
     const transaction: Transaction = new Transaction();
-    const createTokenInstruction: TransactionInstruction = DemoTokenInstruction.createMetadataAccountInstruction(
+
+    const createMetadataAccountInstruction: TransactionInstruction = DemoTokenInstruction.createMetadataAccountInstruction(
       name,
       symbol,
       uri,
@@ -35,25 +39,35 @@ export class DemoTokenServices {
       authority,
       demoTokenProgramId,
     )
-    console.log(createTokenInstruction)
+    transaction.add(createMetadataAccountInstruction)
 
-    transaction.add(createTokenInstruction)
-
-    return connection.sendTransaction(transaction, [payer]);
+    return sendTransaction(connection, transaction, [payer]);
   }
 
-  static async createMasterEditionAccount(
+  static async mintNft(
     connection: Connection,
     payer: Keypair,
-    mintAccount: Keypair,
+    recipientAccount: PublicKey,
+    mintAccount: PublicKey,
     mintAuthority: PublicKey,
     demoTokenProgramId: PublicKey
   ): Promise<string> {
     const transaction: Transaction = new Transaction();
+    const recipientAtaAccount = TokenProgramService.findAssociatedTokenAddress(recipientAccount, mintAccount);
+    if (await SolanaService.isAddressAvailable(connection, recipientAtaAccount)) {
+      transaction.add(
+        TokenProgramInstructionService.createAssociatedTokenAccount(
+          payer.publicKey,
+          recipientAccount,
+          mintAccount
+        )
+      )
+    }
 
-    const createMasterEditionAccountInstruction: TransactionInstruction = DemoTokenInstruction.createMasterEditionAccountInstruction(
+    const createMasterEditionAccountInstruction: TransactionInstruction = DemoTokenInstruction.mintNft(
       payer.publicKey,
-      mintAccount.publicKey,
+      recipientAccount,
+      mintAccount,
       mintAuthority,
       demoTokenProgramId
     )

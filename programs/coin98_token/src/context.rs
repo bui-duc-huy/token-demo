@@ -25,13 +25,21 @@ pub struct CreateMetadataAccountContext<'info> {
 }
 
 #[derive(Accounts)]
-pub struct CreateMasterEditionAccountContext<'info> {
+pub struct MintNFTContext<'info> {
   #[account(mut)]
   pub payer: Signer<'info>,
 
   /// CHECK: Metaplex will check this
   #[account(mut)]
   pub metadata_account: AccountInfo<'info>,
+  
+  /// CHECK: 
+  #[account(mut)]
+  pub recipient_account: AccountInfo<'info>,
+
+  /// CHECK: 
+  #[account(mut)]
+  pub recipient_ata_account: AccountInfo<'info>,
   
   /// CHECK: Metaplex will check this
   pub metaplex_metadata_program_id: AccountInfo<'info>,

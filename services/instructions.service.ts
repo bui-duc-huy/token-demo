@@ -32,7 +32,6 @@ export class DemoTokenInstruction {
     demoTokenProgramId: PublicKey
   ): TransactionInstruction {
     const [metadataAccount] = this.findMetadataAccount(mint);
-    console.log(TOKEN_METADATA_PROGRAM_ID.toString())
 
     return parser.createMetadataAccount(
       {
@@ -54,16 +53,18 @@ export class DemoTokenInstruction {
     )
   }
 
-  static createMasterEditionAccountInstruction(
+  static mintNft(
     payer: PublicKey,
+    recipientAccount: PublicKey,
     mintAccount: PublicKey,
     mintAuthority: PublicKey,
     demoTokenProgramId: PublicKey,
   ): TransactionInstruction {
     const [metadataAccount] = this.findMetadataAccount(mintAccount);
     const [editionAccount] = this.findMasterEditionAccount(mintAccount);
+    const recipientAtaAccount = TokenProgramService.findAssociatedTokenAddress(recipientAccount, mintAccount);
 
-    return parser.createMasterEditionAccount(
+    return parser.mintNft(
       {
       },
       {
@@ -73,6 +74,8 @@ export class DemoTokenInstruction {
         mintAccount,
         mintAuthority,
         editionAccount,
+        recipientAccount,
+        recipientAtaAccount,
         rent: SYSVAR_RENT_PUBKEY,
         systemProgram: SystemProgram.programId,
         tokenProgram: TOKEN_PROGRAM_ID,

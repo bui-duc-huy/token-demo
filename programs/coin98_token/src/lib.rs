@@ -1,7 +1,7 @@
 use anchor_lang::prelude::*;
 use anchor_lang::solana_program::program::invoke;
 use mpl_token_metadata::instruction as mpl_instrucions;
-
+use anchor_spl::token;
 pub mod constant;
 pub mod context;
 pub mod error;
@@ -65,9 +65,19 @@ pub mod coin98_token {
     Ok(())
   }
 
-  pub fn create_master_edition_account(
-    ctx: Context<CreateMasterEditionAccountContext>
+  pub fn mint_nft(
+    ctx: Context<MintNFTContext>
   ) -> Result<()> {
+    token::mint_to(
+      CpiContext::new(ctx.accounts.token_program.to_account_info(), token::MintTo {
+        mint: ctx.accounts.mint_account.to_account_info(),
+        to: ctx.accounts.recipient_ata_account.to_account_info(),
+        authority: ctx.accounts.mint_authority.to_account_info(),
+      }),
+      1
+    )?;
+    msg!("Minted NFT ({}) to address: {}", ctx.accounts.mint_account.key().to_string() ,ctx.accounts.recipient_account.key().to_string());
+
     invoke(
       &mpl_instrucions::create_master_edition_v3(
         ctx.accounts.metaplex_metadata_program_id.key(),
