@@ -14,11 +14,7 @@ use crate::context::*;
 // use crate::event::*;
 // use crate::state::*;
 
-#[cfg(feature = "localhost")]
-declare_id!("7KZpqbt3uTD6DZ2gJpZRjTxVT6NULXVHYPcVw12ivBvE");
-
-#[cfg(all(not(feature = "localhost")))]
-declare_id!("CX1bqbNdhuc2LS9h8i5frBK9B6CARj6s7Qc8XqCnMU7f");
+declare_id!("4ahWyZYRFKDXsXqs96iXXDG92sVYSvsjDVLctwTNeWDD");
 
 #[program]
 pub mod coin98_token {
